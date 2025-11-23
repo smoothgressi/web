@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smoothgressi - Regression & Analysis Suite</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
+</head>
+<body>
+    <!-- Splash Screen -->
+    <div id="splashScreen" class="splash-overlay">
+        <div class="splash-container">
+            <div class="logo">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="app-name">Smoothgressi</div>
+            <div class="app-subtitle">Regression & Analysis Suite</div>
+            
+            <div id="loadingSection">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">Initializing application...</div>
+            </div>
+
+            <div class="action-buttons" id="actionButtons" style="display: none;">
+                <button class="splash-btn splash-btn-primary" id="btn-splash-open">
+                    <i class="fas fa-folder-open"></i>
+                    Open File
+                </button>
+                <button class="splash-btn splash-btn-secondary" id="btn-splash-new">
+                    <i class="fas fa-file"></i>
+                    New Project
+                </button>
+                <button class="splash-btn splash-btn-primary" id="btn-splash-continue">
+                    <i class="fas fa-arrow-right"></i>
+                    Continue
+                </button>
+            </div>
+
+            <div class="version">Version 2.0.0 - Web Edition</div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="app" style="display: none;">
+        <!-- Ribbon Header -->
+        <div id="ribbon" class="ribbon">
+            <!-- Tab Headers -->
+            <div class="ribbon-tabs">
+                <div class="ribbon-tab active" data-tab="home">
+                    <i class="fas fa-home"></i> Home
+                </div>
+                <div class="ribbon-tab" data-tab="insert">
+                    <i class="fas fa-plus-circle"></i> Insert
+                </div>
+                <div class="ribbon-tab" data-tab="data">
+                    <i class="fas fa-database"></i> Data
+                </div>
+                <div class="ribbon-tab" data-tab="analysis">
+                    <i class="fas fa-chart-line"></i> Analysis
+                </div>
+                <div class="ribbon-tab" data-tab="view">
+                    <i class="fas fa-eye"></i> View
+                </div>
+                <div class="ribbon-tab" data-tab="settings">
+                    <i class="fas fa-cog"></i> Settings
+                </div>
+            </div>
+
+            <!-- Tab Content Panels -->
+            <div class="ribbon-content">
+                <!-- Home Tab -->
+                <div class="ribbon-panel active" data-panel="home">
+                    <div class="ribbon-group">
+                        <div class="ribbon-group-title">File</div>
+                        <button class="ribbon-btn" id="btn-open" title="Open file">
+                            <i class="fas fa-folder-open fa-2x"></i>
+                            <span>Open</span>
+                        </button>
+                        <button class="ribbon-btn" id="btn-save-sgxy" title="Save as SGXY">
+                            <i class="fas fa-save fa-2x"></i>
+                            <span>Save SGXY</span>
+                        </button>
+                        <button class="ribbon-btn" id="btn-save-rgx" title="Save as RGX">
+                            <i class="fas fa-file-export fa-2x"></i>
+                            <span>Save RGX</span>
+                        </button>
+                    </div>
+                    
+                    <div class="ribbon-group">
+                        <div class="ribbon-group-title">Clipboard</div>
+                        <button class="ribbon-btn" id="btn-copy" title="Copy data">
+                            <i class="fas fa-copy fa-2x"></i>
+                            <span>Copy</span>
+                        </button>
+                        <button class="ribbon-btn" id="btn-paste" title="Paste data">
+                            <i class="fas fa-paste fa-2x"></i>
+                            <span>Paste</span>
+                        </button>
+                    </div>
+                    
+                    <div class="ribbon-group">
+                        <div class="ribbon-group-title">Quick Actions</div>
+                        <button class="ribbon-btn" id="btn-new" title="New project">
+                            <i class="fas fa-file fa-2x"></i>
+                            <span>New</span>
+                        </button>
+                        <button class="ribbon-btn" id="btn-clear" title="Clear data">
+                            <i class="fas fa-trash fa-2x"></i>
+                            <span>Clear</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Insert Tab -->
+                <div class="ribbon-panel" data-panel="insert">
+                    <div class="ribbon-group">
+                        <div class="ribbon-group-title">Data Entry</div>
+                        <button class="ribbon-btn" id="btn-add-point" title="Add data point">
+                            <i class="fas fa-plus fa-2x"></i>
+                            <span>Add Point</span>
+                        </button>
+                        <button class="ribbon-btn" id="btn-bulk-add" title="Bulk add points">
+                            <i class="fas fa-table fa-2x"></i>
+                            <span>Bulk Add</span>
+                        </button>
+                    </div>
+                    
+                    <div class="ribbon-group">
+                        <div class="ribbon-group-title">Sample Data</div>
+                        <button class="ribbon-btn" id="btn-load-sample" title="Load sample data">
+                            <i class="fas fa-file-csv fa-2x"></i>
+                            <span>Load Sample</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Data Tab -->
+                <div class="ribbon-panel" data-panel="data">
+                    <div class="ribbon-group">
+                        <div class="ribbon-group-title">Transform</div>
+                        <button class="ribbon-btn" id="btn-normalize" title="Normalize data">
+                            <i class="fas fa-arrows-alt-v fa-2x"></i>
+                            <span>Normalize</span>
+                        </button>
+                        <button class="ribbon-btn" id="btn-center" title="Center data">
+                            <i class="fas fa-align-center fa-2x"></i>
+                            <span>Center</span>
+                        </button>
+                        <button class="ribbon-btn" id="btn-sort" title="Sort by X">
+                            <i class="fas fa-sort-amount-down fa-2x"></i>
+                            <span>Sort</span>
+                        </button>
+                    </div>
+                    
+                    <div class="ribbon-group">
+                        <div class="ribbon-group-title">Clean</div>
+                        <button class="ribbon-btn" id="btn-remove-duplicates" title="Remove duplicates">
+                            <i class="fas fa-filter fa-2x"></i>
+                            <span>Remove Dupes</span>
+                        </button>
+                        <button class="ribbon-btn" id="btn-detect-outliers" title="Detect outliers">
+                            <i class="fas fa-exclamation-triangle fa-2x"></i>
+                            <span>Find Outliers</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Analysis Tab -->
+                <div class="ribbon-panel" data-panel="analysis">
+                    <div class="ribbon-group">
+                        <div class="ribbon-group-title">Regression</div>
+                        <button class="ribbon-btn" id="btn-linear" title="Linear regression">
+                            <i class="fas fa-slash fa-2x"></i>
+                            <span>Linear</span>
+                        </button>
+                        <button class="ribbon-btn" id="btn-polynomial" title="Polynomial regression">
+                            <i class="fas fa-wave-square fa-2x"></i>
+                            <span>Polynomial</span>
+                        </button>
+                        <button class="ribbon-btn" id="btn-exponential" title="Exponential regression">
+                            <i class="fas fa-chart-area fa-2x"></i>
+                            <span>Exponential</span>
+                        </button>
+                    </div>
+                    
+                    <div class="ribbon-group">
+                        <div class="ribbon-group-title">Display</div>
+                        <button class="ribbon-btn" id="btn-show-residuals" title="Show residuals">
+                            <i class="fas fa-arrows-alt-h fa-2x"></i>
+                            <span>Residuals</span>
+                        </button>
+                        <button class="ribbon-btn" id="btn-export-results" title="Export results">
+                            <i class="fas fa-download fa-2x"></i>
+                            <span>Export</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- View Tab -->
+                <div class="ribbon-panel" data-panel="view">
+                    <div class="ribbon-group">
+                        <div class="ribbon-group-title">Plot Options</div>
+                        <button class="ribbon-btn toggle-btn active" id="btn-toggle-grid" title="Toggle grid">
+                            <i class="fas fa-border-all fa-2x"></i>
+                            <span>Grid</span>
+                        </button>
+                        <button class="ribbon-btn toggle-btn active" id="btn-toggle-legend" title="Toggle legend">
+                            <i class="fas fa-list fa-2x"></i>
+                            <span>Legend</span>
+                        </button>
+                    </div>
+                    
+                    <div class="ribbon-group">
+                        <div class="ribbon-group-title">Zoom</div>
+                        <button class="ribbon-btn" id="btn-zoom-reset" title="Reset zoom">
+                            <i class="fas fa-sync fa-2x"></i>
+                            <span>Reset</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Settings Tab -->
+                <div class="ribbon-panel" data-panel="settings">
+                    <div class="ribbon-group">
+                        <div class="ribbon-group-title">Appearance</div>
+                        <button class="ribbon-btn" id="btn-theme-light" title="Light theme">
+                            <i class="fas fa-sun fa-2x"></i>
+                            <span>Light</span>
+                        </button>
+                        <button class="ribbon-btn" id="btn-theme-dark" title="Dark theme">
+                            <i class="fas fa-moon fa-2x"></i>
+                            <span>Dark</span>
+                        </button>
+                    </div>
+                    
+                    <div class="ribbon-group">
+                        <div class="ribbon-group-title">About</div>
+                        <button class="ribbon-btn" id="btn-about" title="About Smoothgressi">
+                            <i class="fas fa-info-circle fa-2x"></i>
+                            <span>About</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Left Panel: Data Table -->
+            <div class="side-panel" id="dataPanel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-table"></i> Data Points</h3>
+                    <span id="point-count">0 points</span>
+                </div>
+                <div class="data-table-container">
+                    <table id="dataTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>X</th>
+                                <th>Y</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dataTableBody">
+                            <tr class="empty-state">
+                                <td colspan="4">No data loaded</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Center: Plot Area -->
+            <div class="plot-container">
+                <div id="plotArea"></div>
+                <div id="statusBar" class="status-bar">
+                    <span id="status-message">Ready</span>
+                </div>
+            </div>
+
+            <!-- Right Panel: Results -->
+            <div class="side-panel" id="resultsPanel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-chart-line"></i> Analysis Results</h3>
+                </div>
+                <div id="resultsContent" class="results-content">
+                    <div class="empty-state">
+                        Run a regression analysis to see results
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- File Input (Hidden) -->
+    <input type="file" id="fileInput" accept=".rgx,.sgxy,.json,.txt" style="display: none;">
+
+    <!-- Polynomial Degree Modal -->
+    <div id="polynomialModal" class="modal">
+        <div class="modal-content">
+            <h3>Polynomial Regression</h3>
+            <label for="poly-degree">Select Degree (2-10):</label>
+            <input type="number" id="poly-degree" min="2" max="10" value="2">
+            <div class="modal-buttons">
+                <button id="poly-confirm" class="btn-primary">Run</button>
+                <button id="poly-cancel" class="btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Add Modal -->
+    <div id="bulkAddModal" class="modal">
+        <div class="modal-content" style="min-width: 500px;">
+            <h3>Bulk Add Data Points</h3>
+            <p style="margin-bottom: 10px; color: var(--text-secondary); font-size: 13px;">
+                Enter data as "x,y" or "x;y" (one pair per line)
+            </p>
+            <textarea id="bulk-data-input" rows="10" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--bg-primary); color: var(--text-primary); font-family: monospace; margin-bottom: 20px;"></textarea>
+            <div class="modal-buttons">
+                <button id="bulk-add-confirm" class="btn-primary">Add Points</button>
+                <button id="bulk-add-cancel" class="btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="regression.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
