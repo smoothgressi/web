@@ -250,9 +250,26 @@ const translations = {
         parameter_a: "Paramètre a :",
         parameter_b: "Paramètre b :",
         degree: "Degré :",
-        about_text: "Smoothgressi v2.1.0 - Édition Améliorée\nSuite de Régression & Analyse\n\nUn outil d'analyse de régression moderne basé sur des tableaux.\n\nFonctionnalités :\n• Saisie de données basée sur des tableaux\n• Régression linéaire, polynomiale et exponentielle\n• Animations fluides et interface moderne\n• Mises à jour graphiques en temps réel\n• Support multilingue\n\nConstruit avec Plotly.js et JavaScript vanilla."
+        about_text: "Smoothgressi v2.1.0 - Édition Améliorée\nSuite de Régression & Analyse.\n\nUn outil d'analyse de régression moderne basé sur des tableaux.\n\nFonctionnalités :\n• Saisie de données basée sur des tableaux\n• Régression linéaire, polynomiale et exponentielle\n• Animations fluides et interface moderne\n• Mises à jour graphiques en temps réel\n• Support multilingue\n\nConstruit avec Plotly.js et JavaScript vanilla."
     }
 };
+
+// Ensure modal message elements preserve newlines: use pre-wrap so "\n" becomes visible line breaks.
+// This is safer than converting to innerHTML (avoids XSS) and works with textContent assignments.
+(function ensureModalLineBreaks() {
+    const css = `
+        /* preserve newline characters in modal message text */
+        .modal-content #alertMessage,
+        .modal-content #confirmMessage,
+        .modal-content #promptMessage {
+            white-space: pre-wrap;
+        }
+    `;
+    const style = document.createElement('style');
+    style.type = 'text/css';
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+})();
 
 // Custom Alert System - Integrated Modals
 class AlertSystem {
@@ -719,6 +736,22 @@ class SmoothgressiApp {
         }, 500);
     }
 
+    languageConfirm(lang) {
+        if (lang === this.language) return; // No change needed
+        if (lang === 'en') {
+            customAlert.confirm('Do you really wish to change the language to English?', 'Language').then(result => {
+                if (result) {
+                    this.setLanguage(lang);
+                }
+            });
+        } else if (lang === 'fr') {
+            customAlert.confirm('Voulez-vous vraiment changer la langue vers le français ?', 'Langue').then(result => {
+            if (result) {
+                this.setLanguage(lang);
+            }
+        });
+        }
+    }
     setupEventListeners() {
         // Splash buttons
         document.getElementById('btn-splash-open').addEventListener('click', () => {
@@ -779,8 +812,8 @@ class SmoothgressiApp {
         document.getElementById('btn-theme-dark').addEventListener('click', () => this.setTheme('dark'));
         
         // Language
-        document.getElementById('btn-lang-en').addEventListener('click', () => this.setLanguage('en'));
-        document.getElementById('btn-lang-fr').addEventListener('click', () => this.setLanguage('fr'));
+        document.getElementById('btn-lang-en').addEventListener('click', () => this.languageConfirm('en'));
+        document.getElementById('btn-lang-fr').addEventListener('click', () => this.languageConfirm('fr'));
         
         document.getElementById('btn-about').addEventListener('click', () => this.showAbout());
 
@@ -1204,7 +1237,9 @@ class SmoothgressiApp {
     }
 
     handleFileSelect(event) {
+        customAlert.showLoading('Attente de la selection du fichier...');
         const file = event.target.files[0];
+        customAlert.hideLoading();
         if (!file) return;
 
         const reader = new FileReader();
@@ -1761,7 +1796,7 @@ class SmoothgressiApp {
     }
 
     showAbout() {
-        customAlert.alert(this.t('about_text'));
+        customAlert.alert(this.t('about_text'), "A propos de Smoothgressi");
     }
 
     hideModal(modalId) {
