@@ -14,6 +14,13 @@
         window.onbeforeunload = function(e) {
         return 'Dialog text here.';
         };
+        function isMobile() {
+            return window.innerWidth <= 768;
+        }
+
+        if (isMobile()) {
+            alert("Il semble que vous utilisez un appareil mobile. Pour une meilleure expérience, veuillez utiliser Smoothgressi sur un ordinateur de bureau ou un ordinateur portable. Si vous êtes deja sur un PC, veuillez etendre la taille de la fenêtre.");
+        }
     </script>
 
 </head>
