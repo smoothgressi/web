@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smoothgressi - Regression & Analysis Suite</title>
+    <title>Smoothgressi (Webapp)</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
@@ -12,6 +12,23 @@
     <link rel="icon" type="image/x-icon" href="/icons/sg.ico">
 </head>
 <body>
+    <!-- Language Selection Modal (First Run) -->
+    <div id="languageModal" class="modal">
+        <div class="modal-content">
+            <h3 data-i18n="select_language">Select Language / Choisir la langue</h3>
+            <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
+                <button class="splash-btn splash-btn-primary" onclick="app.setLanguage('en')">
+                    <i class="fas fa-globe"></i>
+                    English
+                </button>
+                <button class="splash-btn splash-btn-primary" onclick="app.setLanguage('fr')">
+                    <i class="fas fa-globe"></i>
+                    Français
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Splash Screen -->
     <div id="splashScreen" class="splash-overlay">
         <div class="splash-container">
@@ -19,29 +36,26 @@
                 <i class="fas fa-chart-line"></i>
             </div>
             <div class="app-name">Smoothgressi</div>
-            <div class="app-subtitle">Regression & Analysis Suite</div>
+            <div class="app-subtitle" data-i18n="subtitle">Regression & Analysis Suite</div>
             
             <div id="loadingSection">
                 <div class="loading-spinner"></div>
-                <div class="loading-text">Initializing application...</div>
+                <div class="loading-text" data-i18n="initializing">Initializing application...</div>
             </div>
 
             <div class="action-buttons" id="actionButtons" style="display: none;">
                 <button class="splash-btn splash-btn-primary" id="btn-splash-open">
                     <i class="fas fa-folder-open"></i>
-                    Open File
+                    <span data-i18n="open_file">Open File</span>
                 </button>
                 <button class="splash-btn splash-btn-secondary" id="btn-splash-new">
                     <i class="fas fa-file"></i>
-                    New Project
+                    <span data-i18n="new_project">New Project</span>
                 </button>
-                <button class="splash-btn splash-btn-primary" id="btn-splash-continue">
-                    <i class="fas fa-arrow-right"></i>
-                    Continue
-                </button>
+                
             </div>
 
-            <div class="version">Version 2.0.0 - Web Edition</div>
+            <div class="version">Version 2.1.0 - Enhanced Edition</div>
         </div>
     </div>
 
@@ -49,92 +63,64 @@
     <div id="app" style="display: none;">
         <!-- Ribbon Header -->
         <div id="ribbon" class="ribbon">
-            <!-- Tab Headers -->
             <div class="ribbon-tabs">
                 <div class="ribbon-tab active" data-tab="home">
-                    <i class="fas fa-home"></i> Home
-                </div>
-                <div class="ribbon-tab" data-tab="insert">
-                    <i class="fas fa-plus-circle"></i> Insert
+                    <i class="fas fa-home"></i> <span data-i18n="home">Home</span>
                 </div>
                 <div class="ribbon-tab" data-tab="data">
-                    <i class="fas fa-database"></i> Data
+                    <i class="fas fa-table"></i> <span data-i18n="data">Data</span>
                 </div>
                 <div class="ribbon-tab" data-tab="analysis">
-                    <i class="fas fa-chart-line"></i> Analysis
+                    <i class="fas fa-chart-line"></i> <span data-i18n="analysis">Analysis</span>
                 </div>
                 <div class="ribbon-tab" data-tab="view">
-                    <i class="fas fa-eye"></i> View
+                    <i class="fas fa-eye"></i> <span data-i18n="view">View</span>
                 </div>
                 <div class="ribbon-tab" data-tab="settings">
-                    <i class="fas fa-cog"></i> Settings
+                    <i class="fas fa-cog"></i> <span data-i18n="settings">Settings</span>
                 </div>
             </div>
 
-            <!-- Tab Content Panels -->
             <div class="ribbon-content">
                 <!-- Home Tab -->
                 <div class="ribbon-panel active" data-panel="home">
                     <div class="ribbon-group">
-                        <div class="ribbon-group-title">File</div>
-                        <button class="ribbon-btn" id="btn-open" title="Open file">
+                        <div class="ribbon-group-title" data-i18n="file">File</div>
+                        <button class="ribbon-btn" id="btn-open">
                             <i class="fas fa-folder-open fa-2x"></i>
-                            <span>Open</span>
+                            <span data-i18n="open">Open</span>
                         </button>
-                        <button class="ribbon-btn" id="btn-save-sgxy" title="Save as SGXY">
+                        <button class="ribbon-btn" id="btn-save-sgxy">
                             <i class="fas fa-save fa-2x"></i>
-                            <span>Save SGXY</span>
+                            <span data-i18n="save_sgxy">Save SGXY</span>
                         </button>
-                        <button class="ribbon-btn" id="btn-save-rgx" title="Save as RGX">
+                        <button class="ribbon-btn" id="btn-save-rgx">
                             <i class="fas fa-file-export fa-2x"></i>
-                            <span>Save RGX</span>
+                            <span data-i18n="save_rgx">Save RGX</span>
                         </button>
                     </div>
                     
                     <div class="ribbon-group">
-                        <div class="ribbon-group-title">Clipboard</div>
-                        <button class="ribbon-btn" id="btn-copy" title="Copy data">
+                        <div class="ribbon-group-title" data-i18n="clipboard">Clipboard</div>
+                        <button class="ribbon-btn" id="btn-copy">
                             <i class="fas fa-copy fa-2x"></i>
-                            <span>Copy</span>
+                            <span data-i18n="copy">Copy</span>
                         </button>
-                        <button class="ribbon-btn" id="btn-paste" title="Paste data">
+                        <button class="ribbon-btn" id="btn-paste">
                             <i class="fas fa-paste fa-2x"></i>
-                            <span>Paste</span>
+                            <span data-i18n="paste">Paste</span>
                         </button>
                     </div>
                     
                     <div class="ribbon-group">
-                        <div class="ribbon-group-title">Quick Actions</div>
-                        <button class="ribbon-btn" id="btn-new" title="New project">
+                        <div class="ribbon-group-title" data-i18n="quick_actions">Quick Actions</div>
+                        <button class="ribbon-btn" id="btn-new">
                             <i class="fas fa-file fa-2x"></i>
-                            <span>New</span>
+                            <span data-i18n="new">New</span>
                         </button>
-                        <button class="ribbon-btn" id="btn-clear" title="Clear data">
+                        <button class="ribbon-btn" id="btn-clear">
                             <i class="fas fa-trash fa-2x"></i>
-                            <span>Clear</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Insert Tab -->
-                <div class="ribbon-panel" data-panel="insert">
-                    <div class="ribbon-group">
-                        <div class="ribbon-group-title">Data Entry</div>
-                        <button class="ribbon-btn" id="btn-add-point" title="Add data point">
-                            <i class="fas fa-plus fa-2x"></i>
-                            <span>Add Point</span>
-                        </button>
-                        <button class="ribbon-btn" id="btn-bulk-add" title="Bulk add points">
-                            <i class="fas fa-table fa-2x"></i>
-                            <span>Bulk Add</span>
-                        </button>
-                    </div>
-                    
-                    <div class="ribbon-group">
-                        <div class="ribbon-group-title">Sample Data</div>
-                        <button class="ribbon-btn" id="btn-load-sample" title="Load sample data">
-                            <i class="fas fa-file-csv fa-2x"></i>
-                            <span>Load Sample</span>
+                            <span data-i18n="clear">Clear</span>
                         </button>
                     </div>
                 </div>
@@ -142,30 +128,46 @@
                 <!-- Data Tab -->
                 <div class="ribbon-panel" data-panel="data">
                     <div class="ribbon-group">
-                        <div class="ribbon-group-title">Transform</div>
-                        <button class="ribbon-btn" id="btn-normalize" title="Normalize data">
-                            <i class="fas fa-arrows-alt-v fa-2x"></i>
-                            <span>Normalize</span>
+                        <div class="ribbon-group-title" data-i18n="data_entry">Data Entry</div>
+                        <button class="ribbon-btn" id="btn-add-point">
+                            <i class="fas fa-plus fa-2x"></i>
+                            <span data-i18n="add_point">Add Point</span>
                         </button>
-                        <button class="ribbon-btn" id="btn-center" title="Center data">
-                            <i class="fas fa-align-center fa-2x"></i>
-                            <span>Center</span>
+                        <button class="ribbon-btn" id="btn-bulk-add">
+                            <i class="fas fa-table fa-2x"></i>
+                            <span data-i18n="bulk_add">Bulk Add</span>
                         </button>
-                        <button class="ribbon-btn" id="btn-sort" title="Sort by X">
-                            <i class="fas fa-sort-amount-down fa-2x"></i>
-                            <span>Sort</span>
+                        <button class="ribbon-btn" id="btn-load-sample">
+                            <i class="fas fa-file-csv fa-2x"></i>
+                            <span data-i18n="load_sample">Load Sample</span>
                         </button>
                     </div>
                     
                     <div class="ribbon-group">
-                        <div class="ribbon-group-title">Clean</div>
-                        <button class="ribbon-btn" id="btn-remove-duplicates" title="Remove duplicates">
-                            <i class="fas fa-filter fa-2x"></i>
-                            <span>Remove Dupes</span>
+                        <div class="ribbon-group-title" data-i18n="transform">Transform</div>
+                        <button class="ribbon-btn" id="btn-normalize">
+                            <i class="fas fa-arrows-alt-v fa-2x"></i>
+                            <span data-i18n="normalize">Normalize</span>
                         </button>
-                        <button class="ribbon-btn" id="btn-detect-outliers" title="Detect outliers">
+                        <button class="ribbon-btn" id="btn-center">
+                            <i class="fas fa-align-center fa-2x"></i>
+                            <span data-i18n="center">Center</span>
+                        </button>
+                        <button class="ribbon-btn" id="btn-sort">
+                            <i class="fas fa-sort-amount-down fa-2x"></i>
+                            <span data-i18n="sort">Sort</span>
+                        </button>
+                    </div>
+                    
+                    <div class="ribbon-group">
+                        <div class="ribbon-group-title" data-i18n="clean">Clean</div>
+                        <button class="ribbon-btn" id="btn-remove-duplicates">
+                            <i class="fas fa-filter fa-2x"></i>
+                            <span data-i18n="remove_dupes">Remove Dupes</span>
+                        </button>
+                        <button class="ribbon-btn" id="btn-detect-outliers">
                             <i class="fas fa-exclamation-triangle fa-2x"></i>
-                            <span>Find Outliers</span>
+                            <span data-i18n="find_outliers">Find Outliers</span>
                         </button>
                     </div>
                 </div>
@@ -173,30 +175,26 @@
                 <!-- Analysis Tab -->
                 <div class="ribbon-panel" data-panel="analysis">
                     <div class="ribbon-group">
-                        <div class="ribbon-group-title">Regression</div>
-                        <button class="ribbon-btn" id="btn-linear" title="Linear regression">
+                        <div class="ribbon-group-title" data-i18n="regression">Regression</div>
+                        <button class="ribbon-btn" id="btn-linear">
                             <i class="fas fa-slash fa-2x"></i>
-                            <span>Linear</span>
+                            <span data-i18n="linear">Linear</span>
                         </button>
-                        <button class="ribbon-btn" id="btn-polynomial" title="Polynomial regression">
+                        <button class="ribbon-btn" id="btn-polynomial">
                             <i class="fas fa-wave-square fa-2x"></i>
-                            <span>Polynomial</span>
+                            <span data-i18n="polynomial">Polynomial</span>
                         </button>
-                        <button class="ribbon-btn" id="btn-exponential" title="Exponential regression">
+                        <button class="ribbon-btn" id="btn-exponential">
                             <i class="fas fa-chart-area fa-2x"></i>
-                            <span>Exponential</span>
+                            <span data-i18n="exponential">Exponential</span>
                         </button>
                     </div>
                     
                     <div class="ribbon-group">
-                        <div class="ribbon-group-title">Display</div>
-                        <button class="ribbon-btn" id="btn-show-residuals" title="Show residuals">
-                            <i class="fas fa-arrows-alt-h fa-2x"></i>
-                            <span>Residuals</span>
-                        </button>
-                        <button class="ribbon-btn" id="btn-export-results" title="Export results">
+                        <div class="ribbon-group-title" data-i18n="export">Export</div>
+                        <button class="ribbon-btn" id="btn-export-results">
                             <i class="fas fa-download fa-2x"></i>
-                            <span>Export</span>
+                            <span data-i18n="export_results">Export</span>
                         </button>
                     </div>
                 </div>
@@ -204,22 +202,22 @@
                 <!-- View Tab -->
                 <div class="ribbon-panel" data-panel="view">
                     <div class="ribbon-group">
-                        <div class="ribbon-group-title">Plot Options</div>
-                        <button class="ribbon-btn toggle-btn active" id="btn-toggle-grid" title="Toggle grid">
+                        <div class="ribbon-group-title" data-i18n="plot_options">Plot Options</div>
+                        <button class="ribbon-btn toggle-btn active" id="btn-toggle-grid">
                             <i class="fas fa-border-all fa-2x"></i>
-                            <span>Grid</span>
+                            <span data-i18n="grid">Grid</span>
                         </button>
-                        <button class="ribbon-btn toggle-btn active" id="btn-toggle-legend" title="Toggle legend">
+                        <button class="ribbon-btn toggle-btn active" id="btn-toggle-legend">
                             <i class="fas fa-list fa-2x"></i>
-                            <span>Legend</span>
+                            <span data-i18n="legend">Legend</span>
                         </button>
                     </div>
                     
                     <div class="ribbon-group">
-                        <div class="ribbon-group-title">Zoom</div>
-                        <button class="ribbon-btn" id="btn-zoom-reset" title="Reset zoom">
+                        <div class="ribbon-group-title" data-i18n="zoom">Zoom</div>
+                        <button class="ribbon-btn" id="btn-zoom-reset">
                             <i class="fas fa-sync fa-2x"></i>
-                            <span>Reset</span>
+                            <span data-i18n="reset">Reset</span>
                         </button>
                     </div>
                 </div>
@@ -227,22 +225,34 @@
                 <!-- Settings Tab -->
                 <div class="ribbon-panel" data-panel="settings">
                     <div class="ribbon-group">
-                        <div class="ribbon-group-title">Appearance</div>
-                        <button class="ribbon-btn" id="btn-theme-light" title="Light theme">
+                        <div class="ribbon-group-title" data-i18n="appearance">Appearance</div>
+                        <button class="ribbon-btn" id="btn-theme-light">
                             <i class="fas fa-sun fa-2x"></i>
-                            <span>Light</span>
+                            <span data-i18n="light">Light</span>
                         </button>
-                        <button class="ribbon-btn" id="btn-theme-dark" title="Dark theme">
+                        <button class="ribbon-btn" id="btn-theme-dark">
                             <i class="fas fa-moon fa-2x"></i>
-                            <span>Dark</span>
+                            <span data-i18n="dark">Dark</span>
                         </button>
                     </div>
                     
                     <div class="ribbon-group">
-                        <div class="ribbon-group-title">About</div>
-                        <button class="ribbon-btn" id="btn-about" title="About Smoothgressi">
+                        <div class="ribbon-group-title" data-i18n="language">Language</div>
+                        <button class="ribbon-btn" id="btn-lang-en">
+                            <i class="fas fa-flag-usa fa-2x"></i>
+                            <span>English</span>
+                        </button>
+                        <button class="ribbon-btn" id="btn-lang-fr">
+                            <i class="fas fa-flag fa-2x"></i>
+                            <span>Français</span>
+                        </button>
+                    </div>
+                    
+                    <div class="ribbon-group">
+                        <div class="ribbon-group-title" data-i18n="about">About</div>
+                        <button class="ribbon-btn" id="btn-about">
                             <i class="fas fa-info-circle fa-2x"></i>
-                            <span>About</span>
+                            <span data-i18n="about">About</span>
                         </button>
                     </div>
                 </div>
@@ -251,46 +261,31 @@
 
         <!-- Main Content Area -->
         <div class="main-content">
-            <!-- Left Panel: Data Table -->
+            <!-- Left Panel: Data Table (hidden on Data tab) -->
             <div class="side-panel" id="dataPanel">
                 <div class="panel-header">
-                    <h3><i class="fas fa-table"></i> Data Points</h3>
-                    <span id="point-count">0 points</span>
+                    <h3><i class="fas fa-table"></i> <span data-i18n="data_table">Data Table</span></h3>
+                    <span id="point-count-side">0 <span data-i18n="rows">rows</span></span>
                 </div>
-                <div class="data-table-container">
-                    <table id="dataTable">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>X</th>
-                                <th>Y</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="dataTableBody">
-                            <tr class="empty-state">
-                                <td colspan="4">No data loaded</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <div class="editable-table-container" id="sideTableContainer"></div>
             </div>
 
-            <!-- Center: Plot Area -->
-            <div class="plot-container">
+            <!-- Center: Plot or Data Table -->
+            <div class="plot-container" id="centerArea">
                 <div id="plotArea"></div>
+                <div class="editable-table-container" id="centerTableContainer" style="display: none;"></div>
                 <div id="statusBar" class="status-bar">
-                    <span id="status-message">Ready</span>
+                    <span id="status-message" data-i18n="ready">Ready</span>
                 </div>
             </div>
 
             <!-- Right Panel: Results -->
             <div class="side-panel" id="resultsPanel">
                 <div class="panel-header">
-                    <h3><i class="fas fa-chart-line"></i> Analysis Results</h3>
+                    <h3><i class="fas fa-chart-line"></i> <span data-i18n="analysis_results">Analysis Results</span></h3>
                 </div>
                 <div id="resultsContent" class="results-content">
-                    <div class="empty-state">
+                    <div class="empty-state" data-i18n="run_regression">
                         Run a regression analysis to see results
                     </div>
                 </div>
@@ -301,30 +296,134 @@
     <!-- File Input (Hidden) -->
     <input type="file" id="fileInput" accept=".rgx,.sgxy,.json,.txt" style="display: none;">
 
-    <!-- Polynomial Degree Modal -->
-    <div id="polynomialModal" class="modal">
-        <div class="modal-content">
-            <h3>Polynomial Regression</h3>
-            <label for="poly-degree">Select Degree (2-10):</label>
-            <input type="number" id="poly-degree" min="2" max="10" value="2">
+    <!-- New Project Wizard Modal -->
+    <div id="wizardModal" class="modal">
+        <div class="modal-content wizard-container">
+            <h3 data-i18n="new_project_setup">New Project Setup</h3>
+            
+            <div class="wizard-steps">
+                <div class="wizard-step active" data-step="1">
+                    <div class="wizard-step-circle">1</div>
+                    <div class="wizard-step-label" data-i18n="column_setup">Column Setup</div>
+                </div>
+                <div class="wizard-step" data-step="2">
+                    <div class="wizard-step-circle">2</div>
+                    <div class="wizard-step-label" data-i18n="data_entry_method">Data Entry</div>
+                </div>
+            </div>
+
+            <div class="wizard-content">
+                <!-- Step 1: Column Setup -->
+                <div class="wizard-page active" data-page="1">
+                    <div class="column-setup">
+                        <label data-i18n="define_columns">Define your dataset columns:</label>
+                        <div class="column-list" id="columnList">
+                            <div class="column-item">
+                                <input type="text" value="X" placeholder="Column name">
+                                <select>
+                                    <option value="numeric" data-i18n="numeric">Numeric</option>
+                                    <option value="string" data-i18n="string">String</option>
+                                </select>
+                                <button class="btn-remove" onclick="app.removeColumn(this)">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="column-item">
+                                <input type="text" value="Y" placeholder="Column name">
+                                <select>
+                                    <option value="numeric" data-i18n="numeric">Numeric</option>
+                                    <option value="string" data-i18n="string">String</option>
+                                </select>
+                                <button class="btn-remove" onclick="app.removeColumn(this)">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button class="btn-add-column" onclick="app.addColumn()">
+                            <i class="fas fa-plus"></i> <span data-i18n="add_column">Add Column</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Data Entry Method -->
+                <div class="wizard-page" data-page="2">
+                    <h4 style="margin-bottom: 15px;" data-i18n="choose_data_entry">Choose data entry method:</h4>
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <button class="splash-btn splash-btn-primary" onclick="app.finishWizard('manual')">
+                            <i class="fas fa-keyboard"></i>
+                            <span data-i18n="manual_input">Manual Table Input</span>
+                        </button>
+                        <button class="splash-btn splash-btn-secondary" onclick="app.finishWizard('import')">
+                            <i class="fas fa-file-import"></i>
+                            <span data-i18n="import_file">Import from File (Coming Soon)</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <div class="modal-buttons">
-                <button id="poly-confirm" class="btn-primary">Run</button>
-                <button id="poly-cancel" class="btn-secondary">Cancel</button>
+                <button id="wizard-back" class="btn-secondary" style="display: none;">
+                    <i class="fas fa-arrow-left"></i> <span data-i18n="back">Back</span>
+                </button>
+                <button id="wizard-next" class="btn-primary">
+                    <span data-i18n="next">Next</span> <i class="fas fa-arrow-right"></i>
+                </button>
+                <button id="wizard-cancel" class="btn-secondary" data-i18n="cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Point Modal -->
+    <div id="addPointModal" class="modal">
+        <div class="modal-content">
+            <h3 data-i18n="add_data_point">Add Data Point</h3>
+            <label for="add-point-x" data-i18n="x_value">X Value:</label>
+            <input type="number" id="add-point-x" step="any" placeholder="Enter X value">
+            
+            <label for="add-point-y" data-i18n="y_value">Y Value:</label>
+            <input type="number" id="add-point-y" step="any" placeholder="Enter Y value">
+            
+            <div class="modal-buttons">
+                <button id="add-point-confirm" class="btn-primary" data-i18n="add_point">Add Point</button>
+                <button id="add-point-cancel" class="btn-secondary" data-i18n="cancel">Cancel</button>
             </div>
         </div>
     </div>
 
     <!-- Bulk Add Modal -->
     <div id="bulkAddModal" class="modal">
-        <div class="modal-content" style="min-width: 500px;">
-            <h3>Bulk Add Data Points</h3>
-            <p style="margin-bottom: 10px; color: var(--text-secondary); font-size: 13px;">
-                Enter data as "x,y" or "x;y" (one pair per line)
+        <div class="modal-content" style="min-width: 700px; max-width: 90vw;">
+            <h3 data-i18n="bulk_add_points">Bulk Add Data Points</h3>
+            <p style="margin-bottom: 15px; color: var(--text-secondary); font-size: 13px;" data-i18n="bulk_add_desc">
+                Add multiple rows at once. Click "Add Row" to add empty rows or paste data directly into cells.
             </p>
-            <textarea id="bulk-data-input" rows="10" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--bg-primary); color: var(--text-primary); font-family: monospace; margin-bottom: 20px;"></textarea>
+            <div class="editable-table-container" style="max-height: 400px; border: 1px solid var(--border-color); border-radius: 4px; margin-bottom: 15px;">
+                <table class="editable-table" id="bulkAddTable">
+                    <thead>
+                        <tr id="bulkAddTableHeader"></tr>
+                    </thead>
+                    <tbody id="bulkAddTableBody"></tbody>
+                </table>
+            </div>
+            <button class="btn-add-row" onclick="app.addBulkRow()">
+                <i class="fas fa-plus"></i> <span data-i18n="add_row">Add Row</span>
+            </button>
             <div class="modal-buttons">
-                <button id="bulk-add-confirm" class="btn-primary">Add Points</button>
-                <button id="bulk-add-cancel" class="btn-secondary">Cancel</button>
+                <button id="bulk-add-confirm" class="btn-primary" data-i18n="add_to_dataset">Add to Dataset</button>
+                <button id="bulk-add-cancel" class="btn-secondary" data-i18n="cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Polynomial Degree Modal -->
+    <div id="polynomialModal" class="modal">
+        <div class="modal-content">
+            <h3 data-i18n="polynomial_regression">Polynomial Regression</h3>
+            <label for="poly-degree" data-i18n="select_degree">Select Degree (2-10):</label>
+            <input type="number" id="poly-degree" min="2" max="10" value="2">
+            <div class="modal-buttons">
+                <button id="poly-confirm" class="btn-primary" data-i18n="run">Run</button>
+                <button id="poly-cancel" class="btn-secondary" data-i18n="cancel">Cancel</button>
             </div>
         </div>
     </div>

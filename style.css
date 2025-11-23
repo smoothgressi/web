@@ -45,7 +45,89 @@ body {
     overflow: hidden;
 }
 
-/* Splash Screen Styles */
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInFromLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInFromRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes rowSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes rowSlideOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
+
+/* Splash Screen */
 .splash-overlay {
     position: fixed;
     top: 0;
@@ -73,17 +155,6 @@ body {
     text-align: center;
     animation: slideIn 0.5s ease-out;
     min-width: 400px;
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 .logo {
@@ -117,11 +188,6 @@ body {
     margin: 0 auto 30px;
 }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
 .loading-text {
     color: #718096;
     font-size: 14px;
@@ -134,15 +200,6 @@ body {
     gap: 12px;
     margin-top: 20px;
     animation: fadeIn 0.3s ease-out;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
 }
 
 .splash-btn {
@@ -159,6 +216,10 @@ body {
     gap: 10px;
 }
 
+.splash-btn:hover {
+    transform: translateY(-2px) scale(1.02);
+}
+
 .splash-btn-primary {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
@@ -166,7 +227,6 @@ body {
 }
 
 .splash-btn-primary:hover {
-    transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
 }
 
@@ -192,9 +252,11 @@ body {
     height: 100vh;
     display: flex;
     flex-direction: column;
+    animation: fadeIn 0.5s ease-out;
+    display: none; /* Ensure app starts hidden */
 }
 
-/* Ribbon Styles */
+/* Ribbon */
 .ribbon {
     background-color: var(--bg-ribbon);
     border-bottom: 1px solid var(--border-color);
@@ -216,7 +278,7 @@ body {
     gap: 8px;
     color: var(--text-secondary);
     border-bottom: 2px solid transparent;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
     font-size: 14px;
     user-select: none;
 }
@@ -224,6 +286,7 @@ body {
 .ribbon-tab:hover {
     background-color: var(--bg-hover);
     color: var(--text-primary);
+    transform: translateY(-1px);
 }
 
 .ribbon-tab.active {
@@ -241,18 +304,16 @@ body {
     display: none;
     padding: 15px;
     gap: 20px;
-    /* Keep groups laid out in a single horizontal row; enable horizontal scroll when needed */
     flex-wrap: nowrap;
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
 }
 
 .ribbon-panel.active {
     display: flex;
+    animation: fadeIn 0.3s ease-out;
 }
 
 .ribbon-group {
-    /* Use block layout so the title sits above and actions flow horizontally */
     display: block;
     padding: 0 15px;
     border-right: 1px solid var(--border-color);
@@ -270,20 +331,8 @@ body {
     margin-bottom: 5px;
 }
 
-/* Arrange action buttons horizontally inside a group */
-.ribbon-group .ribbon-btn {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    margin-right: 10px;
-    margin-bottom: 6px; /* small gap if wrapping is necessary on very small screens */
-    vertical-align: middle;
-}
-
 .ribbon-btn {
-    display: flex;
+    display: inline-flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -293,10 +342,11 @@ body {
     border: 1px solid transparent;
     border-radius: 4px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
     color: var(--text-primary);
     font-size: 11px;
     min-width: 70px;
+    margin-right: 10px;
 }
 
 .ribbon-btn i {
@@ -307,6 +357,7 @@ body {
 .ribbon-btn:hover {
     background-color: var(--bg-hover);
     border-color: var(--border-color);
+    transform: scale(1.03);
 }
 
 .ribbon-btn:hover i {
@@ -315,6 +366,7 @@ body {
 
 .ribbon-btn:active {
     background-color: var(--bg-active);
+    transform: scale(0.98);
 }
 
 .ribbon-btn.toggle-btn.active {
@@ -339,6 +391,13 @@ body {
     border-right: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+    transition: width 0.3s ease;
+}
+
+.side-panel.hidden {
+    width: 0;
+    border: none;
     overflow: hidden;
 }
 
@@ -369,43 +428,85 @@ body {
     color: var(--text-secondary);
 }
 
-.data-table-container {
+/* Editable Table */
+.editable-table-container {
     overflow: auto;
     flex: 1;
+    padding: 15px;
 }
 
-#dataTable {
+.editable-table {
     width: 100%;
     border-collapse: collapse;
+    background-color: var(--bg-secondary);
 }
 
-#dataTable th {
+.editable-table th {
+    background-color: var(--bg-ribbon);
+    padding: 12px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1px solid var(--border-color);
     position: sticky;
     top: 0;
-    background-color: var(--bg-ribbon);
-    padding: 10px;
-    text-align: left;
-    font-size: 12px;
-    font-weight: 600;
-    border-bottom: 2px solid var(--border-color);
     z-index: 10;
 }
 
-#dataTable td {
-    padding: 8px 10px;
-    font-size: 12px;
-    border-bottom: 1px solid var(--border-color);
+.editable-table td {
+    padding: 8px 12px;
+    font-size: 13px;
+    border: 1px solid var(--border-color);
 }
 
-#dataTable tbody tr:hover {
+.editable-table tbody tr {
+    transition: all 0.2s ease;
+    animation: rowSlideIn 0.3s ease-out;
+}
+
+.editable-table tbody tr:hover {
     background-color: var(--bg-hover);
 }
 
-.empty-state {
-    text-align: center;
-    color: var(--text-secondary);
-    padding: 40px 20px !important;
-    font-style: italic;
+.editable-table tbody tr.removing {
+    animation: rowSlideOut 0.3s ease-out;
+}
+
+.editable-table input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: var(--text-primary);
+    padding: 4px;
+    font-size: 13px;
+}
+
+.editable-table input:focus {
+    outline: 2px solid var(--accent-primary);
+    border-radius: 2px;
+}
+
+.table-actions {
+    padding: 10px 15px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 10px;
+}
+
+.btn-add-row {
+    padding: 8px 16px;
+    background-color: var(--accent-primary);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s ease;
+}
+
+.btn-add-row:hover {
+    background-color: var(--accent-hover);
+    transform: scale(1.03);
 }
 
 /* Plot Container */
@@ -414,6 +515,7 @@ body {
     display: flex;
     flex-direction: column;
     background-color: var(--bg-secondary);
+    transition: all 0.3s ease;
 }
 
 #plotArea {
@@ -445,6 +547,7 @@ body {
     background-color: var(--bg-ribbon);
     border-radius: 6px;
     border: 1px solid var(--border-color);
+    animation: scaleIn 0.3s ease-out;
 }
 
 .result-section h4 {
@@ -479,11 +582,18 @@ body {
     word-wrap: break-word;
 }
 
-/* Modal Styles */
+.empty-state {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 40px 20px;
+    font-style: italic;
+}
+
+/* Modal Base */
 .modal {
     display: none;
     position: fixed;
-    z-index: 1000;
+    z-index: 10000; /* Higher than splash */
     left: 0;
     top: 0;
     width: 100%;
@@ -491,6 +601,7 @@ body {
     background-color: rgba(0, 0, 0, 0.5);
     justify-content: center;
     align-items: center;
+    animation: fadeIn 0.3s ease-out;
 }
 
 .modal.show {
@@ -503,6 +614,9 @@ body {
     border-radius: 8px;
     box-shadow: 0 4px 20px var(--shadow);
     min-width: 300px;
+    animation: scaleIn 0.3s ease-out;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .modal-content h3 {
@@ -517,7 +631,8 @@ body {
     font-size: 14px;
 }
 
-.modal-content input[type="number"] {
+.modal-content input[type="number"],
+.modal-content input[type="text"] {
     width: 100%;
     padding: 8px;
     border: 1px solid var(--border-color);
@@ -525,22 +640,29 @@ body {
     background-color: var(--bg-primary);
     color: var(--text-primary);
     font-size: 14px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+    transition: border-color 0.2s;
+}
+
+.modal-content input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
 }
 
 .modal-buttons {
     display: flex;
     gap: 10px;
     justify-content: flex-end;
+    margin-top: 20px;
 }
 
 .btn-primary, .btn-secondary {
-    padding: 8px 20px;
+    padding: 10px 24px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
 }
 
 .btn-primary {
@@ -550,6 +672,7 @@ body {
 
 .btn-primary:hover {
     background-color: var(--accent-hover);
+    transform: scale(1.03);
 }
 
 .btn-secondary {
@@ -559,27 +682,325 @@ body {
 
 .btn-secondary:hover {
     background-color: var(--bg-active);
+    transform: scale(1.03);
 }
 
-/* Action Buttons in Table */
+/* Language Modal Specific Styles */
+#languageModal .modal-content {
+    background-color: var(--bg-secondary);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    min-width: 350px;
+    text-align: center;
+}
+
+#languageModal h3 {
+    margin-bottom: 25px;
+    color: var(--text-primary);
+    font-size: 18px;
+}
+
+/* Wizard */
+.wizard-container {
+    min-width: 600px;
+}
+
+.wizard-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.wizard-steps::before {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: var(--border-color);
+    z-index: 0;
+}
+
+.wizard-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    position: relative;
+    z-index: 1;
+}
+
+.wizard-step-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: var(--bg-hover);
+    border: 2px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+}
+
+.wizard-step.active .wizard-step-circle {
+    background-color: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: white;
+    transform: scale(1.1);
+}
+
+.wizard-step.completed .wizard-step-circle {
+    background-color: var(--success);
+    border-color: var(--success);
+    color: white;
+}
+
+.wizard-step.completed .wizard-step-circle::before {
+    content: '✓';
+    font-weight: bold;
+}
+
+.wizard-step-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.wizard-step.active .wizard-step-label {
+    color: var(--accent-primary);
+    font-weight: 600;
+}
+
+.wizard-content {
+    min-height: 300px;
+}
+
+.wizard-page {
+    display: none;
+    animation: slideInFromRight 0.3s ease-out;
+}
+
+.wizard-page.active {
+    display: block;
+}
+
+.wizard-page.sliding-out {
+    animation: slideInFromLeft 0.3s ease-out reverse;
+}
+
+.column-setup {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.column-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-primary);
+}
+
+.column-item {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    animation: rowSlideIn 0.3s ease-out;
+}
+
+.column-item input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 14px;
+}
+
+.column-item select {
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    min-width: 100px;
+}
+
+.btn-remove {
+    padding: 8px 12px;
+    background-color: var(--error);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-remove:hover {
+    background-color: #dc2626;
+    transform: scale(1.05);
+}
+
+.btn-add-column {
+    padding: 10px;
+    background-color: var(--success);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-add-column:hover {
+    background-color: #059669;
+    transform: scale(1.03);
+}
+
+/* Bulk Add Modal Specific Styles */
+#bulkAddModal .modal-content {
+    min-width: 700px;
+    max-width: 90vw;
+}
+
+#bulkAddModal .editable-table-container {
+    max-height: 400px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    margin-bottom: 15px;
+    padding: 0;
+}
+
+#bulkAddTable th {
+    background-color: var(--bg-ribbon);
+    padding: 12px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+#bulkAddTable td {
+    padding: 8px 12px;
+    font-size: 13px;
+    border: 1px solid var(--border-color);
+}
+
+#bulkAddTable input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: var(--text-primary);
+    padding: 4px;
+    font-size: 13px;
+}
+
+#bulkAddTable input:focus {
+    outline: 2px solid var(--accent-primary);
+    border-radius: 2px;
+}
+
+/* Table action buttons container */
+.editable-table td:last-child {
+    text-align: center;
+    width: 60px;
+}
+
 .action-btn {
     background: none;
     border: none;
     color: var(--accent-primary);
     cursor: pointer;
-    padding: 2px 6px;
-    font-size: 12px;
+    padding: 4px 8px;
+    font-size: 14px;
+    transition: all 0.2s ease;
 }
 
 .action-btn:hover {
     color: var(--accent-hover);
+    transform: scale(1.1);
 }
 
 .action-btn.delete {
     color: var(--error);
 }
 
-/* Scrollbar Styles */
+/* Ensure tables are properly styled in all containers */
+#sideTableContainer,
+#centerTableContainer {
+    padding: 0;
+}
+
+#sideTableContainer .editable-table,
+#centerTableContainer .editable-table {
+    border: 1px solid var(--border-color);
+}
+
+/* Wizard Modal Specific Styles */
+.wizard-container .modal-buttons {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+/* Add Point Modal Specific Styles */
+#addPointModal .modal-content input[type="number"] {
+    margin-bottom: 20px;
+}
+
+/* Polynomial Modal Specific Styles */
+#polynomialModal .modal-content input[type="number"] {
+    margin-bottom: 20px;
+}
+
+/* Status message animations */
+#status-message {
+    transition: opacity 0.3s ease;
+}
+
+/* Loading state for buttons */
+.btn-loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* Error state for inputs */
+.input-error {
+    border-color: var(--error) !important;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.1);
+}
+
+/* Success state */
+.input-success {
+    border-color: var(--success) !important;
+}
+
+/* Ensure plot area is properly contained */
+#plotArea .plotly {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Scrollbar */
 ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
@@ -598,7 +1019,7 @@ body {
     background: var(--text-secondary);
 }
 
-/* Responsive Design */
+/* Responsive */
 @media (max-width: 1200px) {
     .side-panel {
         width: 250px;
@@ -606,10 +1027,6 @@ body {
 }
 
 @media (max-width: 900px) {
-    .ribbon-group {
-        padding: 0 10px;
-    }
-    
     .ribbon-btn {
         min-width: 60px;
         font-size: 10px;
@@ -617,5 +1034,47 @@ body {
     
     .side-panel {
         width: 200px;
+    }
+    
+    .wizard-container {
+        min-width: 90vw;
+    }
+}
+
+@media (max-width: 768px) {
+    .splash-container {
+        min-width: 90vw;
+        padding: 30px 20px;
+    }
+    
+    .wizard-container {
+        min-width: 95vw;
+        padding: 20px;
+    }
+    
+    .modal-content {
+        min-width: 90vw !important;
+    }
+    
+    #bulkAddModal .modal-content {
+        min-width: 95vw !important;
+    }
+}
+
+/* Print styles */
+@media print {
+    .splash-overlay,
+    .modal,
+    .ribbon,
+    .status-bar {
+        display: none !important;
+    }
+    
+    #app {
+        display: flex !important;
+    }
+    
+    .main-content {
+        overflow: visible !important;
     }
 }
