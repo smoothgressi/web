@@ -241,7 +241,10 @@ body {
     display: none;
     padding: 15px;
     gap: 20px;
-    flex-wrap: wrap;
+    /* Keep groups laid out in a single horizontal row; enable horizontal scroll when needed */
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .ribbon-panel.active {
@@ -249,9 +252,8 @@ body {
 }
 
 .ribbon-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    /* Use block layout so the title sits above and actions flow horizontally */
+    display: block;
     padding: 0 15px;
     border-right: 1px solid var(--border-color);
 }
@@ -266,6 +268,18 @@ body {
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 5px;
+}
+
+/* Arrange action buttons horizontally inside a group */
+.ribbon-group .ribbon-btn {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin-right: 10px;
+    margin-bottom: 6px; /* small gap if wrapping is necessary on very small screens */
+    vertical-align: middle;
 }
 
 .ribbon-btn {
