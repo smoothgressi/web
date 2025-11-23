@@ -10,6 +10,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
     <script type="text/javascript" src="/eel.js"></script>
     <link rel="icon" type="image/x-icon" href="/icons/sg.ico">
+    <script>
+        window.onbeforeunload = function(e) {
+        return 'Dialog text here.';
+        };
+    </script>
+
 </head>
 <body>
     <!-- Language Selection Modal (First Run) -->
@@ -52,7 +58,6 @@
                     <i class="fas fa-file"></i>
                     <span data-i18n="new_project">New Project</span>
                 </button>
-                
             </div>
 
             <div class="version">Version 2.1.0 - Enhanced Edition</div>
