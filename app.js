@@ -1,6 +1,11 @@
 // Translations
 const translations = {
     en: {
+        clear_data_subtitle: "Are you sure you want to clear all entered data?",
+        error_text: "Error",
+        success_text: "Success",
+        warning_text: "Warning",
+        info_text: "Information",
         subtitle: "Regression & Analysis Suite",
         initializing: "Initializing application...",
         open_file: "Open File",
@@ -106,7 +111,7 @@ const translations = {
         failed_paste: "Failed to paste data",
         loaded_file: "Loaded {count} rows from {filename}",
         error_loading: "Error loading file: {error}",
-        clear_confirm: "Clear all data?",
+        clear_confirm: "Clear all data",
         new_project_confirm: "Clear all current data and start a new project?",
         define_two_columns: "Please define at least 2 columns",
         columns_need_names: "All columns must have names",
@@ -122,6 +127,11 @@ const translations = {
         about_text: "Smoothgressi v2.1.0 - Enhanced Edition\nRegression & Analysis Suite\n\nA modern table-driven regression analysis tool.\n\nFeatures:\n• Table-based data input\n• Linear, Polynomial & Exponential Regression\n• Smooth animations & modern UI\n• Real-time plot updates\n• Multi-language support\n\nBuilt with Plotly.js and vanilla JavaScript."
     },
     fr: {
+        clear_data_subtitle: "Voulez-vous vraiment effacer toutes les données saisies ?",
+        error_text: "Erreur",
+        success_text: "Succès",
+        warning_text: "Avertissement",
+        info_text: "Information",
         subtitle: "Suite de Régression & Analyse",
         initializing: "Initialisation de l'application...",
         open_file: "Ouvrir un fichier",
@@ -227,7 +237,7 @@ const translations = {
         failed_paste: "Échec du collage des données",
         loaded_file: "{count} ligne(s) chargée(s) depuis {filename}",
         error_loading: "Erreur lors du chargement du fichier : {error}",
-        clear_confirm: "Effacer toutes les données ?",
+        clear_confirm: "Effacer toutes les données",
         new_project_confirm: "Effacer toutes les données actuelles et commencer un nouveau projet ?",
         define_two_columns: "Veuillez définir au moins 2 colonnes",
         columns_need_names: "Toutes les colonnes doivent avoir des noms",
@@ -243,6 +253,378 @@ const translations = {
         about_text: "Smoothgressi v2.1.0 - Édition Améliorée\nSuite de Régression & Analyse\n\nUn outil d'analyse de régression moderne basé sur des tableaux.\n\nFonctionnalités :\n• Saisie de données basée sur des tableaux\n• Régression linéaire, polynomiale et exponentielle\n• Animations fluides et interface moderne\n• Mises à jour graphiques en temps réel\n• Support multilingue\n\nConstruit avec Plotly.js et JavaScript vanilla."
     }
 };
+
+// Custom Alert System - Integrated Modals
+class AlertSystem {
+    constructor() {
+        this.modalId = 'customAlertModal';
+        this.init();
+    }
+
+    init() {
+        // Create the alert modal if it doesn't exist
+        if (!document.getElementById(this.modalId)) {
+            this.createAlertModal();
+        }
+    }
+
+    createAlertModal() {
+        const modalHTML = `
+            <div id="${this.modalId}" class="modal">
+                <div class="modal-content" style="max-width: 500px; text-align: left; display: flex; gap: 20px;">
+                    <!-- Icon on the left -->
+                    <div class="alert-icon" style="font-size: 48px; color: var(--accent-primary);">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+
+                    <!-- Text + buttons on the right -->
+                    <div style="flex: 1;">
+                        <h3 id="alertTitle" style="margin-bottom: 15px; color: var(--text-primary);"></h3>
+                        <p id="alertMessage" style="color: var(--text-secondary); line-height: 1.5; margin-bottom: 20px;"></p>
+
+                        <div class="modal-buttons" style="display: flex; justify-content: right;">
+                            <button id="alertConfirm" class="btn-primary">
+                                <i class="fas fa-check"></i> OK
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+        // Add event listener for the confirm button
+        document.getElementById('alertConfirm').addEventListener('click', () => {
+            this.hide();
+        });
+
+        // Close modal when clicking outside
+        document.getElementById(this.modalId).addEventListener('click', (e) => {
+            if (e.target.id === this.modalId) {
+                this.hide();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.isVisible()) {
+                this.hide();
+            }
+        });
+    }
+
+    show(title, message, type = 'info') {
+        const modal = document.getElementById(this.modalId);
+        const titleEl = document.getElementById('alertTitle');
+        const messageEl = document.getElementById('alertMessage');
+        const iconEl = modal.querySelector('.alert-icon i');
+
+        // Set content
+        titleEl.textContent = title;
+        messageEl.textContent = message;
+
+        // Set icon and color based on type
+        this.setAlertType(iconEl, type);
+
+        // Show modal
+        modal.classList.add('show');
+        
+        // Focus the confirm button
+        setTimeout(() => {
+            document.getElementById('alertConfirm').focus();
+        }, 100);
+    }
+
+    setAlertType(iconEl, type) {
+        const colors = {
+            info: 'var(--accent-primary)',
+            success: 'var(--success)',
+            warning: 'var(--warning)',
+            error: 'var(--error)'
+        };
+
+        const icons = {
+            info: 'fa-info-circle',
+            success: 'fa-check-circle',
+            warning: 'fa-exclamation-triangle',
+            error: 'fa-exclamation-triangle'
+        };
+
+        iconEl.className = `fas ${icons[type] || icons.info}`;
+        iconEl.parentElement.style.color = colors[type] || colors.info;
+    }
+
+    hide() {
+        document.getElementById(this.modalId).classList.remove('show');
+    }
+
+    isVisible() {
+        return document.getElementById(this.modalId).classList.contains('show');
+    }
+}
+
+// Enhanced Alert System with different modal types
+class EnhancedAlertSystem extends AlertSystem {
+    constructor() {
+        super();
+        this.confirmModalId = 'customConfirmModal';
+        this.promptModalId = 'customPromptModal';
+        this.initEnhancedModals();
+    }
+
+    initEnhancedModals() {
+        this.createConfirmModal();
+        this.createPromptModal();
+    }
+
+    createConfirmModal() {
+        const modalHTML = `
+            <div id="${this.confirmModalId}" class="modal">
+                <div class="modal-content" style="max-width: 500px; text-align: left; display: flex; gap: 20px;">
+                    <!-- Icon on the left -->
+                    <div class="confirm-icon" style="font-size: 48px; color: var(--warning);">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+
+                    <!-- Text + buttons on the right -->
+                    <div style="flex: 1;">
+                        <h3 id="confirmTitle" style="margin-bottom: 15px; color: var(--text-primary);"></h3>
+                        <p id="confirmMessage" style="color: var(--text-secondary); line-height: 1.5; margin-bottom: 25px;"></p>
+
+                        <div class="modal-buttons" style="display: flex; justify-content: right; gap: 15px;">
+                            <button id="confirmCancel" class="btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </button>
+                            <button id="confirmOk" class="btn-primary">
+                                <i class="fas fa-check"></i> OK
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
+    createPromptModal() {
+        const modalHTML = `
+            <div id="${this.promptModalId}" class="modal">
+                <div class="modal-content" style="max-width: 500px;">
+                    <h3 id="promptTitle" style="margin-bottom: 15px; color: var(--text-primary);"></h3>
+                    <p id="promptMessage" style="color: var(--text-secondary); line-height: 1.5; margin-bottom: 15px;"></p>
+                    <input type="text" id="promptInput" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); margin-bottom: 25px;">
+                    <div class="modal-buttons" style="justify-content: flex-end; gap: 10px;">
+                        <button id="promptCancel" class="btn-secondary">
+                            Cancel
+                        </button>
+                        <button id="promptOk" class="btn-primary">
+                            OK
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
+    // Replacement for window.alert
+    alert(message, title = 'Information') {
+        return new Promise((resolve) => {
+            this.show(title, message, 'info');
+            
+            const confirmBtn = document.getElementById('alertConfirm');
+            const handler = () => {
+                confirmBtn.removeEventListener('click', handler);
+                this.hide();
+                resolve(true);
+            };
+            confirmBtn.addEventListener('click', handler);
+        });
+    }
+
+    // Replacement for window.confirm
+    confirm(message, title = 'Confirmation') {
+        return new Promise((resolve) => {
+            const modal = document.getElementById(this.confirmModalId);
+            const titleEl = document.getElementById('confirmTitle');
+            const messageEl = document.getElementById('confirmMessage');
+
+            titleEl.textContent = title;
+            messageEl.textContent = message;
+
+            modal.classList.add('show');
+
+            const okHandler = () => {
+                cleanup();
+                resolve(true);
+            };
+
+            const cancelHandler = () => {
+                cleanup();
+                resolve(false);
+            };
+
+            const keyHandler = (e) => {
+                if (e.key === 'Escape') cancelHandler();
+                if (e.key === 'Enter') okHandler();
+            };
+
+            const cleanup = () => {
+                modal.classList.remove('show');
+                document.getElementById('confirmOk').removeEventListener('click', okHandler);
+                document.getElementById('confirmCancel').removeEventListener('click', cancelHandler);
+                document.removeEventListener('keydown', keyHandler);
+            };
+
+            document.getElementById('confirmOk').addEventListener('click', okHandler);
+            document.getElementById('confirmCancel').addEventListener('click', cancelHandler);
+            document.addEventListener('keydown', keyHandler);
+
+            // Focus the cancel button by default
+            setTimeout(() => {
+                document.getElementById('confirmCancel').focus();
+            }, 100);
+        });
+    }
+
+    // Replacement for window.prompt
+    prompt(message, defaultValue = '', title = 'Input') {
+        return new Promise((resolve) => {
+            const modal = document.getElementById(this.promptModalId);
+            const titleEl = document.getElementById('promptTitle');
+            const messageEl = document.getElementById('promptMessage');
+            const inputEl = document.getElementById('promptInput');
+
+            titleEl.textContent = title;
+            messageEl.textContent = message;
+            inputEl.value = defaultValue;
+
+            modal.classList.add('show');
+
+            const okHandler = () => {
+                cleanup();
+                resolve(inputEl.value);
+            };
+
+            const cancelHandler = () => {
+                cleanup();
+                resolve(null);
+            };
+
+            const keyHandler = (e) => {
+                if (e.key === 'Escape') cancelHandler();
+                if (e.key === 'Enter') okHandler();
+            };
+
+            const cleanup = () => {
+                modal.classList.remove('show');
+                document.getElementById('promptOk').removeEventListener('click', okHandler);
+                document.getElementById('promptCancel').removeEventListener('click', cancelHandler);
+                document.removeEventListener('keydown', keyHandler);
+            };
+
+            document.getElementById('promptOk').addEventListener('click', okHandler);
+            document.getElementById('promptCancel').addEventListener('click', cancelHandler);
+            document.addEventListener('keydown', keyHandler);
+
+            // Focus the input field
+            setTimeout(() => {
+                inputEl.focus();
+                inputEl.select();
+            }, 100);
+        });
+    }
+
+    // Custom success message
+    success(message, title = "Succès") {
+        return this.alert(message, title, 'success');
+    }
+
+    // Custom warning message
+    warning(message, title = "Avertissement") {
+        return this.alert(message, title, 'warning');
+    }
+
+    // Custom error message
+    error(message, title = "Erreur") {
+        return this.alert(message, title, 'error');
+    }
+
+    // Loading dialog (for async operations)
+    showLoading(message = 'Loading...') {
+        const loadingId = 'customLoadingModal';
+        
+        if (!document.getElementById(loadingId)) {
+            const loadingHTML = `
+                <div id="${loadingId}" class="modal">
+                    <div class="modal-content" style="max-width: 400px; text-align: center;">
+                        <div class="loading-spinner" style="width: 40px; height: 40px; border: 3px solid var(--border-color); border-top: 3px solid var(--accent-primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px;"></div>
+                        <p style="color: var(--text-secondary); margin: 0;">${message}</p>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', loadingHTML);
+        }
+        
+        document.getElementById(loadingId).classList.add('show');
+    }
+
+    hideLoading() {
+        const loadingId = 'customLoadingModal';
+        const loadingModal = document.getElementById(loadingId);
+        if (loadingModal) {
+            loadingModal.classList.remove('show');
+        }
+    }
+}
+
+// Create global instance
+const customAlert = new EnhancedAlertSystem();
+
+// Override native alert/confirm/prompt (optional - use with caution)
+function overrideNativeAlerts() {
+    if (typeof window !== 'undefined') {
+        // Only override in development or if explicitly enabled
+        if (localStorage.getItem('overrideNativeAlerts') === 'true') {
+            window.originalAlert = window.alert;
+            window.originalConfirm = window.confirm;
+            window.originalPrompt = window.prompt;
+
+            window.alert = (message) => customAlert.alert(message);
+            window.confirm = (message) => customAlert.confirm(message);
+            window.prompt = (message, defaultValue) => customAlert.prompt(message, defaultValue);
+        }
+    }
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    overrideNativeAlerts();
+});
+
+// Usage examples for your app:
+/*
+// Replace all alert() calls with:
+customAlert.alert('Your message here');
+
+// Replace confirm() calls with:
+customAlert.confirm('Are you sure?').then(result => {
+    if (result) {
+        // User clicked OK
+    }
+});
+
+// Show success messages:
+customAlert.success('Operation completed successfully!');
+
+// Show error messages:
+customAlert.error('Something went wrong!');
+
+// Show loading:
+customAlert.showLoading('Processing...');
+// Then hide when done:
+customAlert.hideLoading();
+*/
 
 // Main Application Class
 class SmoothgressiApp {
@@ -543,7 +925,7 @@ class SmoothgressiApp {
         if (this.wizardStep === 1) {
             const columnItems = document.querySelectorAll('#columnList .column-item');
             if (columnItems.length < 2) {
-                alert(this.t('define_two_columns'));
+                customAlert.error(this.t('define_two_columns'));
                 return;
             }
 
@@ -553,7 +935,7 @@ class SmoothgressiApp {
                 const input = item.querySelector('input');
                 if (!input.value.trim()) {
                     valid = false;
-                    alert(this.t('columns_need_names'));
+                    customAlert.error(this.t('columns_need_names'));
                 }
                 columns.push(input.value.trim());
             });
@@ -624,7 +1006,7 @@ class SmoothgressiApp {
             this.updatePlot();
             this.setStatus(this.t('new_created', { count: this.columns.length }));
         } else {
-            alert(this.t('import_coming_soon'));
+            customAlert.alert(this.t('import_coming_soon'));
         }
     }
 
@@ -734,7 +1116,7 @@ class SmoothgressiApp {
         const y = document.getElementById('add-point-y').value;
 
         if (!x || !y) {
-            alert(this.t('columns_need_names'));
+            customAlert.error(this.t('columns_need_names'));
             return;
         }
 
@@ -836,7 +1218,7 @@ class SmoothgressiApp {
                 }
                 this.setStatus(this.t('loaded_file', { count: this.data.length, filename: file.name }));
             } catch (error) {
-                alert(this.t('error_loading', { error: error.message }));
+                customAlert.error(this.t('error_loading', { error: error.message }));
             }
         };
         reader.readAsText(file);
@@ -892,7 +1274,7 @@ class SmoothgressiApp {
         const validData = this.data.filter(row => row.some(cell => cell && cell.trim() !== ''));
         
         if (validData.length === 0) {
-            alert(this.t('no_data_to_save'));
+            customAlert.error(this.t('no_data_to_save'));
             return;
         }
 
@@ -956,11 +1338,16 @@ class SmoothgressiApp {
         URL.revokeObjectURL(url);
     }
 
-    clearData() {
+    async clearData() {
         const validData = this.data.filter(row => row.some(cell => cell && cell.trim() !== ''));
+        
         if (validData.length > 0) {
-            if (!confirm(this.t('clear_confirm'))) return;
+            const result = await customAlert.confirm(this.t('clear_data_subtitle'), this.t('clear_confirm'));
+            if (!result) return; // User cancelled
         }
+        
+        // If we get here, either no data or user confirmed
+        customAlert.showLoading(this.t('data_cleared'));
         this.data = [];
         this.currentRegression = null;
         this.ensureEmptyRows();
@@ -968,13 +1355,14 @@ class SmoothgressiApp {
         this.updatePlot();
         this.clearResults();
         this.setStatus(this.t('data_cleared'));
+        customAlert.hideLoading();
     }
 
     copyData() {
         const validData = this.data.filter(row => row.some(cell => cell && cell.trim() !== ''));
         
         if (validData.length === 0) {
-            alert(this.t('no_data_to_copy'));
+            customAlert.error(this.t('no_data_to_copy'));
             return;
         }
 
@@ -1009,7 +1397,7 @@ class SmoothgressiApp {
                 this.setStatus(this.t('pasted_rows', { count: rows.length }));
             }
         } catch (error) {
-            alert(this.t('failed_paste'));
+            customAlert.error(this.t('failed_paste'));
         }
     }
 
@@ -1052,7 +1440,7 @@ class SmoothgressiApp {
     normalizeData() {
         const validData = this.data.filter(row => row.some(cell => cell && cell.trim() !== ''));
         if (validData.length === 0) {
-            alert(this.t('no_data_normalize'));
+            customAlert.error(this.t('no_data_normalize'));
             return;
         }
         const numData = this.getNumericData();
@@ -1067,7 +1455,7 @@ class SmoothgressiApp {
     centerData() {
         const validData = this.data.filter(row => row.some(cell => cell && cell.trim() !== ''));
         if (validData.length === 0) {
-            alert(this.t('no_data_center'));
+            customAlert.error(this.t('no_data_center'));
             return;
         }
         const numData = this.getNumericData();
@@ -1082,7 +1470,7 @@ class SmoothgressiApp {
     sortData() {
         const validData = this.data.filter(row => row.some(cell => cell && cell.trim() !== ''));
         if (validData.length === 0) {
-            alert(this.t('no_data_sort'));
+            customAlert.error(this.t('no_data_sort'));
             return;
         }
         const numData = this.getNumericData();
@@ -1097,7 +1485,7 @@ class SmoothgressiApp {
     removeDuplicates() {
         const validData = this.data.filter(row => row.some(cell => cell && cell.trim() !== ''));
         if (validData.length === 0) {
-            alert(this.t('no_data'));
+            customAlert.error(this.t('no_data'));
             return;
         }
         const originalCount = validData.length;
@@ -1114,7 +1502,7 @@ class SmoothgressiApp {
     detectOutliers() {
         const numData = this.getNumericData();
         if (numData.x.length === 0) {
-            alert(this.t('no_data'));
+            customAlert.error(this.t('no_data'));
             return;
         }
         const outliers = regressionEngine.detectOutliers(numData, 3.0);
@@ -1132,7 +1520,7 @@ class SmoothgressiApp {
     runLinearRegression() {
         const numData = this.getNumericData();
         if (numData.x.length < 2) {
-            alert(this.t('need_points', { count: 2 }));
+            customAlert.error(this.t('need_points', { count: 2 }));
             return;
         }
 
@@ -1145,7 +1533,7 @@ class SmoothgressiApp {
             this.displayResults();
             this.setStatus(this.t('linear_complete'));
         } catch (error) {
-            alert(error.message);
+            customAlert.error(error.message);
         }
     }
 
@@ -1158,13 +1546,13 @@ class SmoothgressiApp {
         const degree = parseInt(document.getElementById('poly-degree').value);
         
         if (degree < 1 || degree > 10) {
-            alert('Degree must be between 1 and 10');
+            customAlert.error('Degree must be between 1 and 10');
             return;
         }
 
         const numData = this.getNumericData();
         if (numData.x.length < degree + 1) {
-            alert(this.t('need_points', { count: degree + 1 }));
+            customAlert.error(this.t('need_points', { count: degree + 1 }));
             return;
         }
 
@@ -1178,14 +1566,14 @@ class SmoothgressiApp {
             this.displayResults();
             this.setStatus(this.t('polynomial_complete', { degree: degree }));
         } catch (error) {
-            alert(error.message);
+            customAlert.error(error.message);
         }
     }
 
     runExponentialRegression() {
         const numData = this.getNumericData();
         if (numData.x.length < 2) {
-            alert(this.t('need_points', { count: 2 }));
+            customAlert.error(this.t('need_points', { count: 2 }));
             return;
         }
 
@@ -1198,13 +1586,13 @@ class SmoothgressiApp {
             this.displayResults();
             this.setStatus(this.t('exponential_complete'));
         } catch (error) {
-            alert(error.message);
+            customAlert.error(error.message);
         }
     }
 
     exportResults() {
         if (!this.currentRegression) {
-            alert(this.t('no_results_export'));
+            customAlert.error(this.t('no_results_export'));
             return;
         }
 
@@ -1373,7 +1761,7 @@ class SmoothgressiApp {
     }
 
     showAbout() {
-        alert(this.t('about_text'));
+        customAlert.alert(this.t('about_text'));
     }
 
     hideModal(modalId) {
