@@ -300,8 +300,8 @@ class AlertSystem {
                         <p id="alertMessage" style="color: var(--text-secondary); line-height: 1.5; margin-bottom: 20px;"></p>
 
                         <div class="modal-buttons" style="display: flex; justify-content: right;">
-                            <button id="alertConfirm" class="btn-primary">
-                                <i class="fas fa-check"></i> OK
+                            <button id="alertConfirm" class="btn-secondary">
+                                <i class="fas fa-times"></i> Fermer
                             </button>
                         </div>
                     </div>
@@ -409,11 +409,11 @@ class EnhancedAlertSystem extends AlertSystem {
                         <p id="confirmMessage" style="color: var(--text-secondary); line-height: 1.5; margin-bottom: 25px;"></p>
 
                         <div class="modal-buttons" style="display: flex; justify-content: right; gap: 15px;">
-                            <button id="confirmCancel" class="btn-secondary">
-                                <i class="fas fa-times"></i> Cancel
-                            </button>
                             <button id="confirmOk" class="btn-primary">
-                                <i class="fas fa-check"></i> OK
+                                <i class="fas fa-check"></i> Oui
+                            </button>
+                            <button id="confirmCancel" class="btn-secondary">
+                                <i class="fas fa-times"></i> Non
                             </button>
                         </div>
                     </div>
@@ -432,7 +432,7 @@ class EnhancedAlertSystem extends AlertSystem {
                     <input type="text" id="promptInput" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; background: var(--bg-primary); color: var(--text-primary); margin-bottom: 25px;">
                     <div class="modal-buttons" style="justify-content: flex-end; gap: 10px;">
                         <button id="promptCancel" class="btn-secondary">
-                            Cancel
+                            Annuler
                         </button>
                         <button id="promptOk" class="btn-primary">
                             OK
@@ -739,7 +739,7 @@ class SmoothgressiApp {
     languageConfirm(lang) {
         if (lang === this.language) return; // No change needed
         if (lang === 'en') {
-            customAlert.confirm('Do you really wish to change the language to English?', 'Language').then(result => {
+            customAlert.confirm('Do you really wish to change the language to English?\n(Some translations may not be accurate and some items may not be translated at all)', 'Language').then(result => {
                 if (result) {
                     this.setLanguage(lang);
                 }
